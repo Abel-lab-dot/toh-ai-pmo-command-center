@@ -1,0 +1,222 @@
+{
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "overall_health": {
+      "type": "string",
+      "enum": [
+        "GREEN",
+        "AMBER",
+        "RED"
+      ]
+    },
+    "health_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "executive_summary": {
+      "type": "string"
+    },
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "schedule": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "GREEN",
+                "AMBER",
+                "RED"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "evidence": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "score",
+            "evidence"
+          ]
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "GREEN",
+                "AMBER",
+                "RED"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "evidence": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "score",
+            "evidence"
+          ]
+        },
+        "delivery": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "GREEN",
+                "AMBER",
+                "RED"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "evidence": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "score",
+            "evidence"
+          ]
+        },
+        "risk": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "GREEN",
+                "AMBER",
+                "RED"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "evidence": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "score",
+            "evidence"
+          ]
+        },
+        "governance": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "GREEN",
+                "AMBER",
+                "RED"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "evidence": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "score",
+            "evidence"
+          ]
+        }
+      },
+      "required": [
+        "schedule",
+        "budget",
+        "delivery",
+        "risk",
+        "governance"
+      ]
+    },
+    "key_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "action": {
+            "type": "string"
+          },
+          "owner_role": {
+            "type": "string"
+          },
+          "due_in_days": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "requires_approval": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "priority",
+          "action",
+          "owner_role",
+          "due_in_days",
+          "requires_approval"
+        ]
+      }
+    }
+  },
+  "required": [
+    "project_id",
+    "project_name",
+    "overall_health",
+    "health_score",
+    "executive_summary",
+    "dimensions",
+    "key_findings",
+    "recommended_actions"
+  ]
+}

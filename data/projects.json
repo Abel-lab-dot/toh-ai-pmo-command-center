@@ -1,0 +1,151 @@
+{
+  "portfolio_name": "TOH AI PMO Demo Portfolio",
+  "currency": "EUR",
+  "projects": [
+    {
+      "project_id": "PRJ-001",
+      "project_name": "ERP Finance Migration",
+      "business_unit": "Finance",
+      "project_manager": "Alex Martin",
+      "sponsor": "CFO",
+      "status": "In Progress",
+      "planned_start": "2026-03-01",
+      "planned_end": "2026-09-28",
+      "budget_total": 500000,
+      "budget_spent": 410000,
+      "progress_percent": 61,
+      "milestones": {
+        "total": 8,
+        "completed": 4,
+        "overdue": 2
+      },
+      "issues": {
+        "open": 14,
+        "critical": 7,
+        "high": 3
+      },
+      "risks": [
+        {
+          "risk_id": "R-001",
+          "title": "Vendor interface delivery delay",
+          "probability": "High",
+          "impact": "High",
+          "owner": "Vendor Manager",
+          "mitigation_status": "In Progress"
+        },
+        {
+          "risk_id": "R-002",
+          "title": "Budget burn exceeds delivery progress",
+          "probability": "High",
+          "impact": "High",
+          "owner": "Project Manager",
+          "mitigation_status": "Open"
+        }
+      ],
+      "resources": {
+        "planned_fte": 12,
+        "actual_fte": 10,
+        "critical_roles_unfilled": 1
+      },
+      "governance": {
+        "status_report_current": true,
+        "risk_register_current": false,
+        "steering_committee_overdue_days": 9,
+        "missing_documents": [
+          "Updated RAID log"
+        ]
+      },
+      "recent_update": "Interface testing is 12 days late. Finance has requested a revised forecast. Vendor has not yet confirmed the recovery plan."
+    },
+    {
+      "project_id": "PRJ-002",
+      "project_name": "Employee Onboarding Automation",
+      "business_unit": "HR",
+      "project_manager": "Sarah Klein",
+      "sponsor": "CHRO",
+      "status": "In Progress",
+      "planned_start": "2026-05-15",
+      "planned_end": "2026-11-30",
+      "budget_total": 180000,
+      "budget_spent": 72000,
+      "progress_percent": 48,
+      "milestones": {
+        "total": 6,
+        "completed": 3,
+        "overdue": 0
+      },
+      "issues": {
+        "open": 5,
+        "critical": 0,
+        "high": 1
+      },
+      "risks": [
+        {
+          "risk_id": "R-010",
+          "title": "Country-specific HR policy variations",
+          "probability": "Medium",
+          "impact": "Medium",
+          "owner": "HR Process Lead",
+          "mitigation_status": "In Progress"
+        }
+      ],
+      "resources": {
+        "planned_fte": 6,
+        "actual_fte": 6,
+        "critical_roles_unfilled": 0
+      },
+      "governance": {
+        "status_report_current": true,
+        "risk_register_current": true,
+        "steering_committee_overdue_days": 0,
+        "missing_documents": []
+      },
+      "recent_update": "Pilot completed successfully in Hungary. Germany and France are scheduled for the next deployment wave."
+    },
+    {
+      "project_id": "PRJ-003",
+      "project_name": "Service Analytics Modernization",
+      "business_unit": "Operations",
+      "project_manager": "Daniel Rossi",
+      "sponsor": "COO",
+      "status": "In Progress",
+      "planned_start": "2026-01-10",
+      "planned_end": "2026-10-15",
+      "budget_total": 320000,
+      "budget_spent": 198000,
+      "progress_percent": 70,
+      "milestones": {
+        "total": 10,
+        "completed": 7,
+        "overdue": 1
+      },
+      "issues": {
+        "open": 8,
+        "critical": 1,
+        "high": 2
+      },
+      "risks": [
+        {
+          "risk_id": "R-020",
+          "title": "Historical source data quality",
+          "probability": "Medium",
+          "impact": "High",
+          "owner": "Data Lead",
+          "mitigation_status": "In Progress"
+        }
+      ],
+      "resources": {
+        "planned_fte": 8,
+        "actual_fte": 8,
+        "critical_roles_unfilled": 0
+      },
+      "governance": {
+        "status_report_current": true,
+        "risk_register_current": true,
+        "steering_committee_overdue_days": 0,
+        "missing_documents": []
+      },
+      "recent_update": "Dashboard UAT has started. One legacy source system continues to generate incomplete SLA records."
+    }
+  ]
+}
