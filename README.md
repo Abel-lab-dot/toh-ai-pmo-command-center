@@ -11,6 +11,14 @@
 
 ---
 
+## 🏗 Workflow Architecture
+
+The workflow combines AI analysis, governance routing, human approvals, and automated stakeholder communication in one end-to-end process.
+
+![TOH AI PMO Command Center Workflow](assets/pmo-workflow-architecture.png)
+
+---
+
 ## 🎯 Business Problem
 
 Project Managers and PMOs often spend a significant amount of time manually:
