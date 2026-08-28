@@ -1,0 +1,1096 @@
+{
+  "name": "PMO-02 | AMBER Review & Executive Escalation",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "project_id"
+            },
+            {
+              "name": "project_name"
+            },
+            {
+              "name": "overall_health"
+            },
+            {
+              "name": "health_score",
+              "type": "number"
+            },
+            {
+              "name": "executive_summary"
+            },
+            {
+              "name": "sponsor_email"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e5c3be32-9cc7-4649-acc5-9c29e426f27d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59b04a53-f47d-42e0-9796-5c4e46dcee7b",
+              "name": "workflow_action",
+              "value": "PM_REVIEW_REQUIRED",
+              "type": "string"
+            },
+            {
+              "id": "8dee7000-240a-4a45-9cb5-0ce8a238498f",
+              "name": "action_message",
+              "value": "Project requires Project Manager review and corrective-action monitoring.",
+              "type": "string"
+            },
+            {
+              "id": "55712d88-8412-486e-9f54-f7c09fb5ad4b",
+              "name": "review_required",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "c27e1902-0766-4614-9cec-2cedde882e57",
+              "name": "review_level",
+              "value": "PROJECT_MANAGER",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "6d133d72-6822-4293-a76d-85ca7fd92efb",
+      "name": "AMBER | PM Review"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78f36b63-deb1-47af-a619-31417674d8bc",
+              "name": "review_url",
+              "value": "={{ $execution.resumeFormUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "d5379f96-db94-4912-a247-2f86aab773d3",
+              "name": "email_subject",
+              "value": "={{ '[PM REVIEW REQUIRED] ' + $json.project_name + ' — AMBER Project Review' }}",
+              "type": "string"
+            },
+            {
+              "id": "2d949f5b-30bb-43ff-a3d5-eed23cd6fa09",
+              "name": "email_body",
+              "value": "={{ ` <div style=\"font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#202124;line-height:1.6;\">    <div style=\"border-bottom:4px solid #e37400;padding-bottom:16px;margin-bottom:24px;\">     <div style=\"font-size:12px;font-weight:bold;letter-spacing:1px;color:#666;\">       TOH AI PMO COMMAND CENTER     </div>     <h2 style=\"margin:6px 0 0;font-size:24px;\">       Project Manager Review Required     </h2>   </div>    <table style=\"width:100%;border-collapse:collapse;margin-bottom:26px;\">     <tr>       <td style=\"padding:6px 0;width:180px;\"><strong>Project</strong></td>       <td style=\"padding:6px 0;\">${$json.project_name}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Project ID</strong></td>       <td style=\"padding:6px 0;\">${$json.project_id}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Status</strong></td>       <td style=\"padding:6px 0;\">         <span style=\"background:#fef0c7;color:#7a4d00;padding:4px 10px;border-radius:12px;font-weight:bold;\">           ${$json.overall_health}         </span>       </td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Score</strong></td>       <td style=\"padding:6px 0;\">${$json.health_score}</td>     </tr>   </table>    <h3 style=\"font-size:18px;margin:22px 0 10px;\">     AI Executive Summary   </h3>    <p style=\"margin:0 0 22px;\">     ${$json.executive_summary}   </p>    <div style=\"background:#fff8e1;border-left:4px solid #e37400;padding:18px 20px;margin:22px 0;\">     <strong>Action Required</strong>     <p style=\"margin:8px 0 0;\">       Please review the AI assessment and decide whether to acknowledge the issue with a corrective action or escalate it for Executive review.     </p>   </div>    <div style=\"text-align:center;margin:30px 0;\">     <a href=\"${$execution.resumeFormUrl}\"        style=\"background:#e37400;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:5px;font-weight:bold;display:inline-block;\">       OPEN PROJECT REVIEW     </a>   </div>    <div style=\"border-top:1px solid #dadce0;margin-top:26px;padding-top:16px;font-size:12px;color:#777;\">     Generated automatically by the <strong>TOH AI PMO Command Center</strong>.     AI provides decision support; management decisions remain with the responsible Project Manager.   </div>  </div> ` }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "4659d22d-1c11-42b4-9523-d5096c58eca3",
+      "name": "Build PM Review Request"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.sponsor_email }}",
+        "subject": "={{ $json.email_subject }}",
+        "message": "={{ $json.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "c393b407-9f40-4c91-acc3-f2459540ad37",
+      "name": "Send PM Review Request Email"
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Project Manager Review Required",
+        "formDescription": "=Project: {{ $('AMBER | PM Review').first().json.project_name }}\n\nProject ID: {{ $('AMBER | PM Review').first().json.project_id }}\n\nHealth Status: {{ $('AMBER | PM Review').first().json.overall_health }}\n\nHealth Score: {{ $('AMBER | PM Review').first().json.health_score }}\n\nAI Executive Summary:\n{{ $('AMBER | PM Review').first().json.executive_summary }}",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "pm_decision",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "ACKNOWLEDGE"
+                  },
+                  {
+                    "option": "ESCALATE"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "corrective_action",
+              "fieldType": "textarea",
+              "placeholder": "Describe the corrective action or escalation rationale.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "target_completion_date",
+              "fieldType": "date",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        0
+      ],
+      "id": "bf3afcec-c1ef-4214-b885-22af24f002da",
+      "name": "PM Review Form"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.pm_decision }}",
+                    "rightValue": "ACKNOWLEDGE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8cc444ce-d892-468d-80d7-04a33d4e9310"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ACKNOWLEDGE"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "dcb179d9-e534-4688-9bdb-c0c399436d6e",
+                    "leftValue": "={{ $json.pm_decision }}",
+                    "rightValue": "ESCALATE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ESCALATE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "e54aaacf-c377-4961-ac8f-177481c0d12f",
+      "name": "PM Decision"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7673c80c-99a7-49dd-83b9-28ee47c5029a",
+              "name": "pm_review_status",
+              "value": "ACKNOWLEDGED",
+              "type": "string"
+            },
+            {
+              "id": "31ac1977-ba3a-412b-9d1f-8be3e1e1d368",
+              "name": "action_status",
+              "value": "CORRECTIVE_ACTION_REGISTERED",
+              "type": "string"
+            },
+            {
+              "id": "637a9648-6dc5-431d-913d-2d0e7cb4ac02",
+              "name": "monitoring_required",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "272d3d99-9ac1-4943-bcbc-afeffec07037",
+              "name": "project_id",
+              "value": "={{ $('AMBER | PM Review').first().json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "6dd87445-0736-444f-b8f7-c2b33fa4e4b6",
+              "name": "overall_health",
+              "value": "={{ $('AMBER | PM Review').first().json.overall_health }}",
+              "type": "string"
+            },
+            {
+              "id": "ab8d1ed4-f727-467b-88e6-89e9711d29f6",
+              "name": "health_score",
+              "value": "={{ $('AMBER | PM Review').first().json.health_score }}",
+              "type": "number"
+            },
+            {
+              "id": "40c04adf-eb75-4c24-baeb-50ea28f0fcb5",
+              "name": "executive_summary",
+              "value": "={{ $('AMBER | PM Review').first().json.executive_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "ec53db84-f93d-4b7c-991d-2fa22bb8fa27",
+              "name": "sponsor_email",
+              "value": "={{ $('AMBER | PM Review').first().json.sponsor_email }}",
+              "type": "string"
+            },
+            {
+              "id": "54757ea7-891b-44dc-8508-ff32aa5ec8de",
+              "name": "project_name",
+              "value": "={{ $('AMBER | PM Review').first().json.project_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1264,
+        -272
+      ],
+      "id": "df96f123-9719-4929-8055-f4876e8d57ca",
+      "name": "ACKNOWLEDGED | Corrective Action Registered"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "272f0a52-b424-4ddb-926b-f31d6a8f0803",
+              "name": "email_subject",
+              "value": "={{ '[AMBER PMO ACTION] ' + $json.project_name + ' — Corrective Action Registered' }}",
+              "type": "string"
+            },
+            {
+              "id": "2099f7ce-349c-40fb-8a21-1fd42cd0df03",
+              "name": "email_body",
+              "value": "={{ ` <div style=\"font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#202124;line-height:1.6;\">    <div style=\"border-bottom:4px solid #e37400;padding-bottom:16px;margin-bottom:24px;\">     <div style=\"font-size:12px;font-weight:bold;letter-spacing:1px;color:#666;\">       TOH AI PMO COMMAND CENTER     </div>     <h2 style=\"margin:6px 0 0;font-size:24px;\">       Project Manager Action     </h2>   </div>    <table style=\"width:100%;border-collapse:collapse;margin-bottom:24px;\">     <tr>       <td style=\"padding:6px 0;width:190px;\"><strong>Project</strong></td>       <td style=\"padding:6px 0;\">${$json.project_name}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Project ID</strong></td>       <td style=\"padding:6px 0;\">${$json.project_id}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Status</strong></td>       <td style=\"padding:6px 0;\">         <span style=\"background:#fef0c7;color:#7a4d00;padding:4px 10px;border-radius:12px;font-weight:bold;\">           ${$json.overall_health}         </span>       </td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Score</strong></td>       <td style=\"padding:6px 0;\">${$json.health_score}</td>     </tr>   </table>    <h3 style=\"font-size:18px;margin-bottom:8px;\">AI Executive Summary</h3>    <div style=\"border-top:1px solid #dadce0;padding-top:12px;margin-bottom:22px;\">     ${$json.executive_summary}   </div>    <div style=\"background:#fff7e0;border-left:4px solid #e37400;padding:18px 20px;margin:22px 0;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Project Manager Review</h3>      <p style=\"margin:6px 0;\">       <strong>Decision:</strong> ${$json.pm_decision}     </p>      <p style=\"margin:6px 0;\">       <strong>Corrective Action:</strong><br>       ${$json.corrective_action}     </p>      <p style=\"margin:6px 0;\">       <strong>Target Completion Date:</strong>       ${$json.target_completion_date}     </p>   </div>    <div style=\"background:#f8f9fa;border:1px solid #dadce0;padding:16px 18px;margin:22px 0;\">     <h3 style=\"margin:0 0 10px;font-size:18px;\">Action Status</h3>      <p style=\"margin:6px 0;\">       <strong>PM Review Status:</strong> ${$json.pm_review_status}     </p>      <p style=\"margin:6px 0;\">       <strong>Action Status:</strong> ${$json.action_status}     </p>      <p style=\"margin:6px 0;\">       <strong>Monitoring Required:</strong>       ${$json.monitoring_required ? 'YES' : 'NO'}     </p>   </div>    <div style=\"border-top:1px solid #dadce0;margin-top:26px;padding-top:16px;font-size:12px;color:#777;\">     Generated automatically by the <strong>TOH AI PMO Command Center</strong>.     AI provides decision support; responsibility for corrective actions remains with the Project Manager.   </div>  </div> ` }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1488,
+        -272
+      ],
+      "id": "1425b2e8-9e60-4ed6-a90f-ecc863af8db7",
+      "name": "Build PM Action Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.sponsor_email }}",
+        "subject": "={{ $json.email_subject }}",
+        "message": "={{ $json.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1712,
+        -272
+      ],
+      "id": "d3bcfd87-db52-4db0-b87b-71ad8888fe64",
+      "name": "Send PM Action Email"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54357e42-afd8-443c-bc85-32b7c5b50507",
+              "name": "escalation_source",
+              "value": "PROJECT_MANAGER",
+              "type": "string"
+            },
+            {
+              "id": "b0b47bf4-53d5-409e-819d-ba6f787a6111",
+              "name": "escalation_status",
+              "value": "PENDING_EXECUTIVE_REVIEW",
+              "type": "string"
+            },
+            {
+              "id": "d560e1b6-cd61-43b7-bb07-92ffd3c2627c",
+              "name": "review_required",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "35615272-18e2-4e02-949f-831ff76fa7b7",
+              "name": "review_level",
+              "value": "EXECUTIVE",
+              "type": "string"
+            },
+            {
+              "id": "8b40f417-ee53-4a30-a42a-8a7a2520d609",
+              "name": "project_id",
+              "value": "={{ $('AMBER | PM Review').first().json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "8b811777-839e-4edc-9973-604d4c0dd85d",
+              "name": "project_name",
+              "value": "={{ $('AMBER | PM Review').first().json.project_name }}",
+              "type": "string"
+            },
+            {
+              "id": "c0a1c7c3-dd1b-434a-bb3e-8393946521d6",
+              "name": "overall_health",
+              "value": "={{ $('AMBER | PM Review').first().json.overall_health }}",
+              "type": "string"
+            },
+            {
+              "id": "18ffab41-6165-42af-8d48-34e8f87b6019",
+              "name": "health_score",
+              "value": "={{ $('AMBER | PM Review').first().json.health_score }}",
+              "type": "number"
+            },
+            {
+              "id": "81459025-8036-4755-8fac-9f84312383d4",
+              "name": "executive_summary",
+              "value": "={{ $('AMBER | PM Review').first().json.executive_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "8c46697e-5dc6-4519-b380-ae27f34d63dc",
+              "name": "sponsor_email",
+              "value": "={{ $('AMBER | PM Review').first().json.sponsor_email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1264,
+        256
+      ],
+      "id": "93c07e63-23d4-4048-9806-430306e97832",
+      "name": "ESCALATED | Prepare Executive Review"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "73c87b30-672d-4c5d-baee-4aafae94c23f",
+              "name": "review_url",
+              "value": "={{ $execution.resumeFormUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "2a38ecf8-0372-4911-86d2-29aa65da49d9",
+              "name": "email_subject",
+              "value": "={{ '[AMBER EXECUTIVE REVIEW REQUIRED] ' + $json.project_name + ' — Executive Decision Required' }}",
+              "type": "string"
+            },
+            {
+              "id": "3abe9b22-05b9-47ee-aca4-ae22095877ba",
+              "name": "email_body",
+              "value": "={{ ` <div style=\"font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#202124;line-height:1.6;\">    <div style=\"border-bottom:4px solid #e37400;padding-bottom:16px;margin-bottom:24px;\">     <div style=\"font-size:12px;font-weight:bold;letter-spacing:1px;color:#666;\">       TOH AI PMO COMMAND CENTER     </div>     <h2 style=\"margin:6px 0 0;font-size:24px;\">       Executive Review Required     </h2>   </div>    <div style=\"background:#fff4d6;border-left:4px solid #e37400;padding:18px 20px;margin:22px 0;\">     <strong>Project Manager Escalation</strong>     <p style=\"margin:8px 0 0;\">       The Project Manager has escalated this AMBER project for Executive review and decision.     </p>   </div>    <table style=\"width:100%;border-collapse:collapse;margin-bottom:26px;\">     <tr>       <td style=\"padding:6px 0;width:180px;\"><strong>Project</strong></td>       <td style=\"padding:6px 0;\">${$json.project_name}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Project ID</strong></td>       <td style=\"padding:6px 0;\">${$json.project_id}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Status</strong></td>       <td style=\"padding:6px 0;\">         <span style=\"background:#fef0c7;color:#7a4d00;padding:4px 10px;border-radius:12px;font-weight:bold;\">           ${$json.overall_health}         </span>       </td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Score</strong></td>       <td style=\"padding:6px 0;\">${$json.health_score}</td>     </tr>   </table>    <h3 style=\"font-size:18px;margin-bottom:8px;\">AI Executive Summary</h3>   <div style=\"border-top:1px solid #dadce0;padding-top:12px;margin-bottom:24px;\">     ${$json.executive_summary}   </div>    <div style=\"background:#f8f9fa;border:1px solid #dadce0;padding:18px 20px;margin:22px 0;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Project Manager Escalation</h3>      <p style=\"margin:6px 0;\">       <strong>PM Decision:</strong> ${$json.pm_decision}     </p>      <p style=\"margin:6px 0;\">       <strong>Corrective Action / Escalation Rationale:</strong><br>       ${$json.corrective_action}     </p>      <p style=\"margin:6px 0;\">       <strong>Target Completion Date:</strong> ${$json.target_completion_date}     </p>   </div>    <div style=\"background:#fff8e1;border:1px solid #f4c150;padding:18px 20px;margin:22px 0;\">     <strong>Executive Decision Required</strong>     <p style=\"margin:8px 0 0;\">       Please review the AI assessment and the Project Manager's escalation, then approve or reject the proposed action.     </p>   </div>    <div style=\"text-align:center;margin:30px 0;\">     <a href=\"${$execution.resumeFormUrl}\"        style=\"background:#e37400;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:5px;font-weight:bold;display:inline-block;\">       OPEN EXECUTIVE REVIEW     </a>   </div>    <div style=\"border-top:1px solid #dadce0;margin-top:28px;padding-top:16px;font-size:12px;color:#777;\">     Generated automatically by the <strong>TOH AI PMO Command Center</strong>.     AI provides decision support; final approval remains with the responsible Executive.   </div>  </div> ` }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1472,
+        256
+      ],
+      "id": "1e3c4c26-5666-4073-8aa8-8c413d92fbe7",
+      "name": "Build AMBER Executive Review Request"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.sponsor_email }}",
+        "subject": "={{ $json.email_subject }}",
+        "message": "={{ $json.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1696,
+        256
+      ],
+      "id": "4c757644-159d-4cb1-940d-f6ebdcd05356",
+      "name": "Send AMBER Executive Review Request Email"
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Executive Approval Required",
+        "formDescription": "=Project: {{ $('ESCALATED | Prepare Executive Review').first().json.project_name }}\n\nProject ID: {{ $('ESCALATED | Prepare Executive Review').first().json.project_id }}\n\nHealth Status: {{ $('ESCALATED | Prepare Executive Review').first().json.overall_health }}\n\nHealth Score: {{ $('ESCALATED | Prepare Executive Review').first().json.health_score }}\n\nEscalation Source: {{ $('ESCALATED | Prepare Executive Review').first().json.escalation_source }}\n\nAI Executive Summary:\n{{ $('ESCALATED | Prepare Executive Review').first().json.executive_summary }}\n\nPM Decision:\n{{ $('ESCALATED | Prepare Executive Review').first().json.pm_decision }}\n\nPM Corrective Action / Escalation Rationale:\n{{ $('ESCALATED | Prepare Executive Review').first().json.corrective_action }}\n\nPM Target Completion Date:\n{{ $('ESCALATED | Prepare Executive Review').first().json.target_completion_date }}",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "executive_decision",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "APPROVE"
+                  },
+                  {
+                    "option": "REJECT"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "executive_comment",
+              "fieldType": "textarea",
+              "placeholder": "Enter executive decision comments or instructions"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1920,
+        256
+      ],
+      "id": "6a6925e1-0a4c-4fea-aaf3-5d7045d96e5f",
+      "name": "Executive Review Form"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.executive_decision }}",
+                    "rightValue": "APPROVE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b8e7b304-6f75-4cbc-9d73-ac4eebb1d458"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "APPROVE"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "45f4cb15-4664-41b0-9267-34072688a232",
+                    "leftValue": "={{ $json.executive_decision }}",
+                    "rightValue": "REJECT",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "REJECT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2144,
+        256
+      ],
+      "id": "b5b630e1-8bc4-472e-8808-3e13b2f5fe06",
+      "name": "Executive Decision"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b724d2b-a0e6-40ad-83ad-13aa50c124c7",
+              "name": "executive_review_status",
+              "value": "APPROVED",
+              "type": "string"
+            },
+            {
+              "id": "50915899-a3bb-43b5-a82a-1a59df25f77d",
+              "name": "action_status",
+              "value": "APPROVED_FOR_ACTION",
+              "type": "string"
+            },
+            {
+              "id": "b56291bf-bd2c-466d-82c8-3b5086377008",
+              "name": "monitoring_required",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "cf63d277-5d0f-4bb4-81a9-9d7ff6113505",
+              "name": "project_id",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ee514f7c-02ea-42cc-ba0f-9bc7be3d4f3e",
+              "name": "project_name",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.project_name }}",
+              "type": "string"
+            },
+            {
+              "id": "1b27c0ab-7af0-44cd-becc-7b347332b945",
+              "name": "overall_health",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.overall_health }}",
+              "type": "string"
+            },
+            {
+              "id": "5b940573-0ad3-4b3a-b7b9-304f037d8aa2",
+              "name": "health_score",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.health_score }}",
+              "type": "number"
+            },
+            {
+              "id": "82d8af60-9c12-4134-9b94-b8e86a808082",
+              "name": "executive_summary",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.executive_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "e3cffb3b-05d2-4c12-a773-5f0fd8abced8",
+              "name": "sponsor_email",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.sponsor_email }}",
+              "type": "string"
+            },
+            {
+              "id": "ec7799e1-c227-4d39-b87f-ace802480580",
+              "name": "pm_decision",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.pm_decision }}",
+              "type": "string"
+            },
+            {
+              "id": "2d257dd4-6663-4388-a72d-34930a360a5c",
+              "name": "corrective_action",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.corrective_action }}",
+              "type": "string"
+            },
+            {
+              "id": "af99f746-49c1-4b57-aae5-9d1af4a886cd",
+              "name": "target_completion_date",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.target_completion_date }}",
+              "type": "string"
+            },
+            {
+              "id": "ce4460ef-40ca-467d-aea5-c6e2b74880a5",
+              "name": "escalation_source",
+              "value": "PROJECT_MANAGER",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2288,
+        -32
+      ],
+      "id": "3f593a63-d349-4763-b44a-f437728d97ba",
+      "name": "APPROVED | Prepare Executive Action"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0d8a15fd-e6b2-4a46-960e-83eba6f17f9a",
+              "name": "email_subject",
+              "value": "={{ '[EXECUTIVE APPROVAL] ' + $json.project_name + ' — Corrective Action Approved' }}",
+              "type": "string"
+            },
+            {
+              "id": "0b6425ac-7ae0-4102-9c5f-447b324e9781",
+              "name": "email_body",
+              "value": "={{ ` <div style=\"font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#202124;line-height:1.6;\">    <div style=\"border-bottom:4px solid #e37400;padding-bottom:16px;margin-bottom:24px;\">     <div style=\"font-size:12px;font-weight:bold;letter-spacing:1px;color:#666;\">       TOH AI PMO COMMAND CENTER     </div>     <h2 style=\"margin:6px 0 0;font-size:24px;\">       Executive Approval — Corrective Action Authorized     </h2>   </div>    <div style=\"background:#fff4d6;border-left:4px solid #e37400;padding:18px 20px;margin-bottom:24px;\">     <strong>Executive Approval</strong>     <p style=\"margin:8px 0 0;\">       The proposed corrective action for this AMBER project has been reviewed and approved by Executive Management.     </p>   </div>    <table style=\"width:100%;border-collapse:collapse;margin-bottom:26px;\">     <tr>       <td style=\"padding:6px 0;width:190px;\"><strong>Project</strong></td>       <td style=\"padding:6px 0;\">${$json.project_name}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Project ID</strong></td>       <td style=\"padding:6px 0;\">${$json.project_id}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Status</strong></td>       <td style=\"padding:6px 0;\">         <span style=\"background:#fef0c7;color:#7a4d00;padding:4px 10px;border-radius:12px;font-weight:bold;\">           ${$json.overall_health}         </span>       </td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Score</strong></td>       <td style=\"padding:6px 0;\">${$json.health_score}</td>     </tr>   </table>    <h3 style=\"font-size:18px;margin-bottom:8px;\">AI Executive Summary</h3>   <div style=\"border-top:1px solid #dadce0;padding-top:12px;margin-bottom:24px;\">     ${$json.executive_summary}   </div>    <div style=\"background:#f8f9fa;border:1px solid #dadce0;padding:18px 20px;margin-bottom:22px;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Project Manager Escalation</h3>      <p style=\"margin:6px 0;\">       <strong>PM Decision:</strong> ${$json.pm_decision}     </p>      <p style=\"margin:6px 0;\">       <strong>Corrective Action / Escalation Rationale:</strong><br>       ${$json.corrective_action}     </p>      <p style=\"margin:6px 0;\">       <strong>Target Completion Date:</strong> ${$json.target_completion_date}     </p>   </div>    <div style=\"background:#e6f4ea;border-left:4px solid #188038;padding:18px 20px;margin-bottom:22px;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Executive Decision</h3>      <p style=\"margin:6px 0;\">       <strong>Decision:</strong> ${$json.executive_decision}     </p>      <p style=\"margin:6px 0;\">       <strong>Executive Comment:</strong><br>       ${$json.executive_comment || 'No executive comment provided.'}     </p>   </div>    <div style=\"background:#f8f9fa;border:1px solid #dadce0;padding:18px 20px;margin-bottom:22px;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Final Status</h3>      <p style=\"margin:6px 0;\">       <strong>Executive Review Status:</strong> ${$json.executive_review_status}     </p>      <p style=\"margin:6px 0;\">       <strong>Action Status:</strong> ${$json.action_status}     </p>      <p style=\"margin:6px 0;\">       <strong>Monitoring Required:</strong> ${$json.monitoring_required ? 'YES' : 'NO'}     </p>   </div>    <div style=\"border-top:1px solid #dadce0;margin-top:28px;padding-top:16px;font-size:12px;color:#777;\">     Generated automatically by the <strong>TOH AI PMO Command Center</strong>.     AI provides decision support; final management accountability remains with the responsible stakeholders.   </div>  </div> ` }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2512,
+        -32
+      ],
+      "id": "6ef9cc28-c3c6-400d-8a89-e4cece0ee156",
+      "name": "Build Executive Action Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.sponsor_email }}",
+        "subject": "={{ $json.email_subject }}",
+        "message": "={{ $json.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2736,
+        -32
+      ],
+      "id": "e0907e3f-083c-4b9b-8913-ab7bd7ce382d",
+      "name": "Send Executive Action Email"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "28c74932-ddce-4e02-98a3-379da2d0d0ae",
+              "name": "executive_review_status",
+              "value": "REJECTED",
+              "type": "string"
+            },
+            {
+              "id": "7e53ee87-9597-4750-aed3-690174f1a32e",
+              "name": "action_status",
+              "value": "RETURNED_TO_PROJECT_MANAGER",
+              "type": "string"
+            },
+            {
+              "id": "495b388b-7eab-4338-99f6-d7cb3da40ea7",
+              "name": "monitoring_required",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "9526e073-8043-46af-bed8-49e802048b10",
+              "name": "project_id",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "4d907919-5a70-4cae-b7a2-8ab68726c76c",
+              "name": "project_name",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.project_name }}",
+              "type": "string"
+            },
+            {
+              "id": "17e4aee8-a689-42a7-8020-307cf0248696",
+              "name": "overall_health",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.overall_health }}",
+              "type": "string"
+            },
+            {
+              "id": "150a4824-9c66-4efc-92c6-905f62913759",
+              "name": "health_score",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.health_score }}",
+              "type": "number"
+            },
+            {
+              "id": "796f332a-5408-4357-a309-cd5ad6dc61ba",
+              "name": "executive_summary",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.executive_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "0f0db772-4fdf-4f6b-b07c-a22a4119a9c2",
+              "name": "sponsor_email",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.sponsor_email }}",
+              "type": "string"
+            },
+            {
+              "id": "2a775d9b-930a-4ff1-8089-f2129c9c79c7",
+              "name": "pm_decision",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.pm_decision }}",
+              "type": "string"
+            },
+            {
+              "id": "3e48ba21-296e-47b7-82e9-c41840c93f7e",
+              "name": "corrective_action",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.corrective_action }}",
+              "type": "string"
+            },
+            {
+              "id": "b0f83972-2bad-4e13-9ffe-ef3fc085b163",
+              "name": "target_completion_date",
+              "value": "={{ $('ESCALATED | Prepare Executive Review').first().json.target_completion_date }}",
+              "type": "string"
+            },
+            {
+              "id": "8c197c6d-bb76-4a29-9b53-047b0554ce75",
+              "name": "escalation_source",
+              "value": "PROJECT_MANAGER",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2272,
+        528
+      ],
+      "id": "83d17331-c8f4-41e6-ac3d-ca9e26929b15",
+      "name": "REJECTED | Return to PM"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c75ff7f5-a462-4030-b074-7adccffe0cbe",
+              "name": "email_subject",
+              "value": "={{ '[EXECUTIVE REVIEW] ' + $json.project_name + ' — Returned to Project Manager' }}",
+              "type": "string"
+            },
+            {
+              "id": "6e08d1d2-e099-43c1-a25d-74688a8c3ddc",
+              "name": "email_body",
+              "value": "={{ ` <div style=\"font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#202124;line-height:1.6;\">    <div style=\"border-bottom:4px solid #d93025;padding-bottom:16px;margin-bottom:24px;\">     <div style=\"font-size:12px;font-weight:bold;letter-spacing:1px;color:#666;\">       TOH AI PMO COMMAND CENTER     </div>     <h2 style=\"margin:6px 0 0;font-size:24px;\">       Executive Review — Returned to Project Manager     </h2>   </div>    <div style=\"background:#fce8e6;border-left:4px solid #d93025;padding:18px 20px;margin:22px 0;\">     <strong>Executive Decision</strong>     <p style=\"margin:8px 0 0;\">       The proposed action for this AMBER project was not approved and has been returned to the Project Manager for reassessment.     </p>   </div>    <table style=\"width:100%;border-collapse:collapse;margin-bottom:24px;\">     <tr>       <td style=\"padding:6px 0;width:180px;\"><strong>Project</strong></td>       <td style=\"padding:6px 0;\">${$json.project_name}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Project ID</strong></td>       <td style=\"padding:6px 0;\">${$json.project_id}</td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Status</strong></td>       <td style=\"padding:6px 0;\">         <span style=\"background:#fef0c7;color:#7a4d00;padding:4px 10px;border-radius:12px;font-weight:bold;\">           ${$json.overall_health}         </span>       </td>     </tr>     <tr>       <td style=\"padding:6px 0;\"><strong>Health Score</strong></td>       <td style=\"padding:6px 0;\">${$json.health_score}</td>     </tr>   </table>    <h3 style=\"font-size:18px;margin-bottom:8px;\">AI Executive Summary</h3>   <p>${$json.executive_summary}</p>    <div style=\"background:#f8f9fa;border:1px solid #dadce0;padding:16px 18px;margin:22px 0;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Project Manager Escalation</h3>     <p style=\"margin:6px 0;\"><strong>PM Decision:</strong> ${$json.pm_decision}</p>     <p style=\"margin:6px 0;\"><strong>Corrective Action / Escalation Rationale:</strong><br>       ${$json.corrective_action}     </p>     <p style=\"margin:6px 0;\"><strong>Target Completion Date:</strong> ${$json.target_completion_date}</p>   </div>    <div style=\"background:#fce8e6;border-left:4px solid #d93025;padding:18px 20px;margin:22px 0;\">     <h3 style=\"margin:0 0 12px;font-size:18px;\">Executive Feedback</h3>     <p style=\"margin:6px 0;\"><strong>Decision:</strong> ${$json.executive_decision}</p>     <p style=\"margin:6px 0;\"><strong>Executive Comment:</strong><br>       ${$json.executive_comment || 'No executive comment provided.'}     </p>   </div>    <div style=\"background:#fff8e1;border:1px solid #f4c150;padding:16px 18px;margin:22px 0;\">     <h3 style=\"margin:0 0 10px;font-size:18px;\">Required Next Action</h3>     <p style=\"margin:0;\">       The Project Manager should review the Executive feedback, reassess the proposed corrective action and submit a revised approach where appropriate.     </p>   </div>    <div style=\"background:#f8f9fa;border:1px solid #dadce0;padding:16px 18px;margin:22px 0;\">     <h3 style=\"margin:0 0 10px;font-size:18px;\">Workflow Status</h3>     <p style=\"margin:6px 0;\"><strong>Executive Review Status:</strong> ${$json.executive_review_status}</p>     <p style=\"margin:6px 0;\"><strong>Action Status:</strong> ${$json.action_status}</p>     <p style=\"margin:6px 0;\"><strong>Monitoring Required:</strong> ${$json.monitoring_required ? 'YES' : 'NO'}</p>   </div>    <div style=\"border-top:1px solid #dadce0;margin-top:26px;padding-top:16px;font-size:12px;color:#777;\">     Generated automatically by the <strong>TOH AI PMO Command Center</strong>.     AI provides decision support; management decisions remain with the responsible Project Manager and Executive.   </div>  </div> ` }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2496,
+        528
+      ],
+      "id": "c6440c6e-cc10-4c42-a17b-fdf9d3cbcc73",
+      "name": "Build Executive Rejection Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.sponsor_email }}",
+        "subject": "={{ $json.email_subject }}",
+        "message": "={{ $json.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2720,
+        528
+      ],
+      "id": "b74fc6d7-207d-47ed-b40f-ea185cc7f6f2",
+      "name": "Send Executive Rejection Email"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AMBER | PM Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AMBER | PM Review": {
+      "main": [
+        [
+          {
+            "node": "Build PM Review Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build PM Review Request": {
+      "main": [
+        [
+          {
+            "node": "Send PM Review Request Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send PM Review Request Email": {
+      "main": [
+        [
+          {
+            "node": "PM Review Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PM Review Form": {
+      "main": [
+        [
+          {
+            "node": "PM Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PM Decision": {
+      "main": [
+        [
+          {
+            "node": "ACKNOWLEDGED | Corrective Action Registered",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ESCALATED | Prepare Executive Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ACKNOWLEDGED | Corrective Action Registered": {
+      "main": [
+        [
+          {
+            "node": "Build PM Action Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build PM Action Email": {
+      "main": [
+        [
+          {
+            "node": "Send PM Action Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ESCALATED | Prepare Executive Review": {
+      "main": [
+        [
+          {
+            "node": "Build AMBER Executive Review Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build AMBER Executive Review Request": {
+      "main": [
+        [
+          {
+            "node": "Send AMBER Executive Review Request Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send AMBER Executive Review Request Email": {
+      "main": [
+        [
+          {
+            "node": "Executive Review Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executive Review Form": {
+      "main": [
+        [
+          {
+            "node": "Executive Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executive Decision": {
+      "main": [
+        [
+          {
+            "node": "APPROVED | Prepare Executive Action",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "REJECTED | Return to PM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "APPROVED | Prepare Executive Action": {
+      "main": [
+        [
+          {
+            "node": "Build Executive Action Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Executive Action Email": {
+      "main": [
+        [
+          {
+            "node": "Send Executive Action Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "REJECTED | Return to PM": {
+      "main": [
+        [
+          {
+            "node": "Build Executive Rejection Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Executive Rejection Email": {
+      "main": [
+        [
+          {
+            "node": "Send Executive Rejection Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "nodeGroups": [],
+  "tags": []
+}
