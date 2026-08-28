@@ -1,550 +1,431 @@
-# 🚀 TOH AI PMO Command Center
+# TOH AI PMO Command Center
 
-### AI-Powered Project Health Monitoring, Governance & Human-in-the-Loop Escalation
+> **AI-powered Project Management Office workflow for automated project health assessment, risk-based routing, and human-in-the-loop governance.**
 
-> A practical AI transformation prototype that uses **n8n + Google Gemini** to automate project health analysis, governance routing, management approvals, and stakeholder communication.
+The **TOH AI PMO Command Center** is a portfolio project demonstrating how AI and workflow automation can support an enterprise PMO in identifying project health issues, escalating risks, and coordinating management decisions.
 
-![Status](https://img.shields.io/badge/Status-Portfolio%20MVP-orange)
-![n8n](https://img.shields.io/badge/Automation-n8n-red)
-![Gemini](https://img.shields.io/badge/AI-Google%20Gemini-blue)
-![Human in the Loop](https://img.shields.io/badge/Governance-Human--in--the--Loop-green)
+The solution combines **n8n**, **Google Gemini**, structured project data, automated email notifications, and human approval workflows.
 
----
+It is designed around a simple principle:
 
-## 🏗 Workflow Architecture
-
-The workflow combines AI analysis, governance routing, human approvals, and automated stakeholder communication in one end-to-end process.
-
-![TOH AI PMO Command Center Workflow](assets/pmo-workflow-architecture.png)
+> **AI provides analysis and decision support. Human stakeholders retain accountability for management decisions.**
 
 ---
 
 ## 🎯 Business Problem
 
-Project Managers and PMOs often spend a significant amount of time manually:
+Traditional PMO health reporting often depends on manual activities such as:
 
-- reviewing project status reports
-- comparing delivery progress against budget consumption
-- checking risks and issues
-- monitoring governance compliance
-- preparing escalation summaries
-- chasing corrective actions
-- preparing management communications
+- reviewing project status reports;
+- comparing budget consumption with delivery progress;
+- identifying overdue milestones and critical issues;
+- checking governance compliance;
+- deciding which projects require escalation;
+- preparing management notifications;
+- following up with Project Managers and Executives.
 
-Much of this operational work can be automated.
+This creates administrative overhead and can delay intervention on deteriorating projects.
 
-The **TOH AI PMO Command Center** explores how AI can automate project monitoring and governance administration while ensuring that **important management decisions remain with people**.
-
----
-
-# 💡 Solution
-
-The workflow automatically retrieves project portfolio data and uses **Google Gemini** to analyse each project's health.
-
-Each project is classified into one of three categories:
-
-🟢 **GREEN** — Project is healthy and requires no escalation.
-
-🟠 **AMBER** — Project requires Project Manager review and corrective-action monitoring.
-
-🔴 **RED** — Project requires immediate Executive review.
-
-The AI performs the analysis and prepares decision-support information.
-
-Human decision-makers remain responsible for approving, rejecting, or escalating management actions.
+The TOH AI PMO Command Center explores how these activities can be partially automated while keeping critical decisions under human control.
 
 ---
 
-# 🧠 How It Works
+## 💡 Solution
 
-```text
-                PROJECT PORTFOLIO DATA
-                         │
-                         ▼
-                   HTTP Request
-                         │
-                         ▼
-                 Split Projects
-                         │
-                         ▼
-                Google Gemini AI
-                         │
-                         ▼
-             Structured AI Assessment
-                         │
-                         ▼
-              GREEN / AMBER / RED
-                 HEALTH ROUTING
-               /         |         \
-              /          |          \
-          GREEN        AMBER         RED
-            │             │            │
-            │             ▼            ▼
-            │        PM Review      Executive
-            │             │          Review
-            │        ┌────┴────┐   ┌────┴────┐
-            │        │         │   │         │
-            │   ACKNOWLEDGE ESCALATE APPROVE REJECT
-            │        │         │      │       │
-            │        │         ▼      │       │
-            │        │    Executive   │       │
-            │        │      Review    │       │
-            │        │                │       │
-            └────────┴────────────────┴───────┘
-                         │
-                         ▼
-             Automated Stakeholder
-                 Notifications
+The system automatically retrieves portfolio data and evaluates each project across five PMO dimensions:
+
+| Dimension | Assessment |
+|---|---|
+| Schedule | Milestones, delays and delivery timing |
+| Budget | Budget consumption versus project progress |
+| Delivery | Overall implementation progress |
+| Risk & Issues | Critical issues, risks and resource constraints |
+| Governance | Reporting, RAID management and steering compliance |
+
+Google Gemini performs the project-health assessment and returns a structured result containing:
+
+- overall project health;
+- health score;
+- executive summary;
+- dimension-level assessments;
+- key findings;
+- recommended management actions.
+
+Projects are then automatically routed according to their health classification.
+
+---
+
+# 🏗️ Architecture
+
+```mermaid
+flowchart LR
+
+    A[Project Portfolio Data] --> B[PMO-01<br/>Project Health Analyzer]
+
+    B --> C[Google Gemini<br/>AI Health Assessment]
+
+    C --> D{Project Health}
+
+    D -->|GREEN| E[No Escalation]
+
+    D -->|AMBER| F[PMO-02<br/>AMBER Review & Executive Escalation]
+
+    F --> G[Project Manager Review]
+
+    G -->|ACKNOWLEDGE| H[Corrective Action Registered]
+
+    G -->|ESCALATE| I[Executive Review]
+
+    I -->|APPROVE| J[Corrective Action Authorized]
+
+    I -->|REJECT| K[Returned to Project Manager]
+
+    D -->|RED| L[Direct Executive Review]
+
+    L -->|APPROVE| M[Executive Escalation Authorized]
+
+    L -->|REJECT| N[Escalation Rejected]
 ```
 
----
+The architecture is intentionally modular.
 
-# 🟢 GREEN Workflow
+### PMO-01 — Project Health Analyzer
 
-Projects classified as **GREEN** require no escalation.
+PMO-01 acts as the **AI analysis and orchestration layer**.
 
-The workflow records that the project is operating within acceptable project-health parameters and allows the governance process to continue without unnecessary intervention.
+It:
 
-This helps prevent management teams from spending time reviewing projects that do not require attention.
+1. retrieves project portfolio data;
+2. separates individual projects;
+3. sends project data to Google Gemini;
+4. validates the AI response using a structured output schema;
+5. classifies projects as GREEN, AMBER or RED;
+6. routes each project to the appropriate governance process.
 
----
+### PMO-02 — AMBER Review & Executive Escalation
 
-# 🟠 AMBER Workflow
+PMO-02 handles the **human governance process for AMBER projects**.
 
-An AMBER project is automatically routed to the **Project Manager**.
+A Project Manager can:
 
-The PM receives the AI-generated project assessment and must make a management decision.
+**ACKNOWLEDGE**
 
-### Option 1 — ACKNOWLEDGE
-
-The Project Manager:
-
-- acknowledges the issue
-- defines a corrective action
-- establishes a target completion date
-
-The workflow then:
-
-- registers the corrective action
-- marks the project for continued monitoring
-- generates a professional HTML notification
-- automatically sends the action notification to the relevant stakeholder
-
-### Option 2 — ESCALATE
-
-If the Project Manager determines that the issue requires senior management intervention, the workflow escalates the project to an **Executive Review**.
-
-The Executive can then:
-
-**APPROVE**
+The issue is accepted, a corrective action is registered, and the project remains under monitoring.
 
 or
 
-**REJECT**
+**ESCALATE**
 
-the proposed action.
-
-The appropriate workflow path and stakeholder communication are then triggered automatically.
-
----
-
-# 🔴 RED Workflow
-
-Projects classified as RED bypass the normal PM review and move directly to **Executive review**.
-
-The AI provides the Executive with a concise assessment containing information such as:
-
-- project health
-- delivery progress
-- budget consumption
-- milestone delays
-- critical issues
-- major risks
-- resource constraints
-- governance concerns
+The project is forwarded for Executive Review.
 
 The Executive can then:
 
-### APPROVE
+**APPROVE** → authorize the corrective action.
 
-The escalation is approved for action and the relevant stakeholders are notified.
-
-### REJECT
-
-The proposed escalation is stopped and the decision is communicated to the relevant project stakeholders.
+**REJECT** → return the issue to the Project Manager for reassessment.
 
 ---
 
-# 👤 Human-in-the-Loop AI Governance
+# 🚦 Risk-Based Governance Model
 
-A core design principle of this project is:
-
-> **AI analyses. Humans decide. Automation executes.**
-
-The AI does not autonomously approve major project decisions.
-
-Instead, Gemini acts as a **decision-support layer**.
-
-Project Managers and Executives remain accountable for decisions involving corrective actions and escalations.
-
-This architecture helps combine the speed of AI automation with appropriate management oversight.
-
----
-
-# 🤖 AI Project Health Analysis
-
-Gemini evaluates multiple project-health signals, including:
-
-### Delivery
-
-- progress percentage
-- overdue milestones
-- schedule pressure
-
-### Financial Performance
-
-- total project budget
-- current spend
-- relationship between budget consumption and delivery progress
-
-### Issues & Risks
-
-- number of open issues
-- critical issues
-- high-severity issues
-- risk probability
-- risk impact
-- mitigation status
-
-### Resources
-
-- planned FTE
-- actual FTE
-- unfilled critical roles
-
-### Governance
-
-- status-report compliance
-- risk-register status
-- overdue Steering Committee meetings
-- missing governance documentation
-
-### Recent Project Updates
-
-Free-text project information is also considered by the AI when generating its assessment.
-
----
-
-# 📊 Demo Portfolio
-
-The current demonstration portfolio contains three projects deliberately designed to represent different governance scenarios.
-
-| Project | Business Area | Intended Scenario |
+| Health | Workflow Response | Human Decision |
 |---|---|---|
-| **PRJ-001 — ERP Finance Migration** | Finance | 🔴 RED |
-| **PRJ-002 — Employee Onboarding Automation** | HR | 🟢 GREEN |
-| **PRJ-003 — Service Analytics Modernization** | Operations | 🟠 AMBER |
+| 🟢 GREEN | Continue normal monitoring | No escalation required |
+| 🟠 AMBER | Project Manager review | Acknowledge or escalate |
+| 🔴 RED | Immediate Executive review | Approve or reject escalation |
 
-Because the health assessment is AI-generated, exact health scores and wording may vary slightly between executions.
-
----
-
-# 📧 Dynamic Stakeholder Communication
-
-The workflow dynamically identifies project stakeholders from the portfolio dataset.
-
-Examples include:
-
-```text
-project_manager
-project_manager_email
-sponsor
-sponsor_email
-```
-
-This enables notifications to be routed according to the project being processed rather than using a single fixed recipient.
-
-Professional HTML emails are generated for scenarios including:
-
-- PM corrective action registered
-- Executive corrective-action approval
-- Executive rejection / return to PM
-- RED executive escalation approval
-- RED executive escalation rejection
+This design ensures that governance effort is proportional to project risk.
 
 ---
 
-# ⚙️ Workflow Triggers
+# 🤖 AI Decision Support
 
-The workflow supports two execution modes.
+The AI is instructed to evaluate only the evidence supplied in the project dataset.
 
-### Manual Trigger
+It assesses:
 
-Used for development, testing and live demonstrations.
+- schedule health;
+- budget health;
+- delivery health;
+- risk and issue exposure;
+- governance compliance.
 
-```text
-Execute Workflow
-      │
-      ▼
-PMO Analysis
+The output is constrained by a structured JSON schema so downstream workflow nodes receive predictable data.
+
+Example:
+
+```json
+{
+  "project_id": "PRJ-003",
+  "project_name": "Service Analytics Modernization",
+  "overall_health": "AMBER",
+  "health_score": 74,
+  "executive_summary": "...",
+  "dimensions": {
+    "schedule": {},
+    "budget": {},
+    "delivery": {},
+    "risk": {},
+    "governance": {}
+  },
+  "key_findings": [],
+  "recommended_actions": []
+}
 ```
 
-### Webhook Trigger
+The AI does **not** independently authorize management actions.
 
-Provides a production-style integration endpoint.
-
-```text
-POST /webhook/pmo-project-health
-```
-
-This allows another application or system to initiate the PMO analysis process.
-
-The current portfolio deployment runs locally through Docker/n8n, so the production webhook is currently available within the local environment.
+Final escalation and approval decisions remain with the relevant human stakeholder.
 
 ---
 
-# 🛠 Technology Stack
+# 👤 Human-in-the-Loop Governance
+
+A central design principle of the project is maintaining human accountability.
+
+The workflow combines automated AI assessment with explicit approval gates.
+
+For example:
+
+```text
+AI detects AMBER project
+        ↓
+Project Manager reviews assessment
+        ↓
+ACKNOWLEDGE ──────────────→ Corrective Action Registered
+
+        OR
+
+ESCALATE
+        ↓
+Executive reviews escalation
+        ↓
+APPROVE / REJECT
+```
+
+Interactive review forms are generated directly by n8n and linked through automated email notifications.
+
+---
+
+# 📧 Automated Stakeholder Communication
+
+The system generates contextual HTML notifications including:
+
+- project name and ID;
+- project health classification;
+- health score;
+- AI executive summary;
+- corrective action information;
+- Project Manager decision;
+- Executive decision;
+- workflow status;
+- required next action.
+
+Different notification templates are used for AMBER and RED governance processes.
+
+---
+
+# 🧪 Demo Portfolio
+
+The repository includes a fictional portfolio used to demonstrate the workflow.
+
+| Project | Scenario |
+|---|---|
+| PRJ-001 — ERP Finance Migration | 🔴 RED |
+| PRJ-002 — Employee Onboarding Automation | 🟢 GREEN |
+| PRJ-003 — Service Analytics Modernization | 🟠 AMBER |
+
+The sample portfolio deliberately contains different project-health conditions so every major routing path can be demonstrated.
+
+---
+
+# ✅ Tested Workflow Scenarios
+
+The current MVP has been tested across the complete governance model:
+
+| Scenario | Result |
+|---|---|
+| GREEN → No Escalation | ✅ Tested |
+| AMBER → PM ACKNOWLEDGE | ✅ Tested |
+| AMBER → ESCALATE → Executive APPROVE | ✅ Tested |
+| AMBER → ESCALATE → Executive REJECT | ✅ Tested |
+| RED → Executive APPROVE | ✅ Tested |
+| RED → Executive REJECT | ✅ Tested |
+
+This includes end-to-end execution through AI analysis, routing, email notification, human review forms and downstream decision handling.
+
+---
+
+# 🛠️ Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| **n8n** | Workflow orchestration and automation |
+| **n8n** | Workflow orchestration and human approval flows |
 | **Google Gemini** | AI project-health analysis |
-| **Structured Output Parser** | Enforces structured AI responses |
-| **Gmail API / OAuth** | Automated stakeholder notifications |
-| **GitHub** | Portfolio data and project source repository |
-| **JSON** | Project portfolio data model |
-| **Webhooks / REST** | Workflow triggering and integration |
+| **Structured Output Parser** | Validation of AI responses |
+| **Gmail API / OAuth 2.0** | Automated stakeholder notifications |
+| **GitHub** | Version-controlled project assets and portfolio documentation |
 | **Docker** | Local n8n runtime environment |
+| **JSON** | Portfolio dataset and workflow interchange |
 
 ---
 
-# 🏗 Architecture
-
-```text
-GitHub Portfolio Data
-        │
-        ▼
-   HTTP Request
-        │
-        ▼
-   n8n Workflow
-        │
-        ▼
- Google Gemini
-        │
-        ▼
-Structured Output
-        │
-        ▼
-Health Classification
-        │
- ┌──────┼──────┐
- │      │      │
-GREEN AMBER   RED
- │      │      │
- │   PM Review │
- │      │      │
- │   Executive │
- │     Review  │
- │      │      │
- └──────┼──────┘
-        │
-        ▼
- Gmail Notifications
-```
-
----
-
-# 🧩 Key Automation Components
-
-The workflow currently includes:
-
-- GitHub project-data retrieval
-- portfolio project splitting
-- Gemini-powered project-health analysis
-- structured AI output validation
-- GREEN / AMBER / RED routing
-- Project Manager review forms
-- corrective-action registration
-- Executive approval forms
-- approval/rejection routing
-- dynamic stakeholder resolution
-- professional HTML email generation
-- Gmail automation
-- manual execution trigger
-- production-style webhook trigger
-
----
-
-# 👨‍💻 What I Built
-
-I designed and implemented the complete prototype, including:
-
-- project portfolio data model
-- AI project-health assessment logic
-- Gemini integration
-- structured output schema
-- n8n orchestration architecture
-- GREEN / AMBER / RED governance rules
-- Project Manager review process
-- Executive approval process
-- human-in-the-loop decision architecture
-- corrective-action routing
-- dynamic email-recipient logic
-- automated HTML stakeholder communications
-- webhook execution capability
-- workflow testing and debugging
-
-The goal was not simply to create an AI chatbot.
-
-The objective was to demonstrate how **AI can be embedded into an operational management process and connected directly to real business actions**.
-
----
-
-# 🎯 AI Transformation Principles Demonstrated
-
-This project demonstrates several principles relevant to enterprise AI transformation.
-
-### Automation before administration
-
-Repetitive reporting, routing and communication can be automated rather than manually coordinated.
-
-### Prototype first
-
-A functional prototype was built before designing a large enterprise architecture.
-
-### Human accountability
-
-High-impact management decisions remain with Project Managers and Executives.
-
-### Decision support rather than AI replacement
-
-AI identifies signals and generates insights; people provide organisational judgement.
-
-### Integration over isolation
-
-AI becomes significantly more useful when connected to business processes, data, approvals and communication systems.
-
-### Supportability
-
-The workflow separates project data, AI analysis, governance logic and communication steps so that the solution can be understood and extended.
-
----
-
-# 📁 Repository Structure
+# 📂 Repository Structure
 
 ```text
 toh-ai-pmo-command-center/
+│
+├── assets/
+│   └── screenshots and architecture material
 │
 ├── data/
 │   └── projects.json
 │
 ├── prompts/
-│   └── project-health-system-prompt.txt
+│   └── AI / PMO prompt documentation
 │
 ├── schemas/
-│   └── project-health-output-schema.json
+│   └── structured output schemas
 │
 ├── workflows/
-│   └── n8n workflow export
+│   ├── pmo-01-project-health-analyzer.json
+│   └── pmo-02-amber-review-executive-escalation.json
 │
 └── README.md
 ```
 
+Workflow exports published in this repository are **sanitized**.
+
+Credentials, OAuth tokens, API keys and environment-specific identifiers are intentionally excluded.
+
 ---
 
-# 🧪 Example RED Scenario
-
-Consider a project where:
+# 🔄 PMO-01 Processing Flow
 
 ```text
-Delivery progress:      61%
-Budget consumed:        82%
-Overdue milestones:     2
-Critical issues:        7
-Critical role unfilled: 1
-Steering Committee:     9 days overdue
-Risk register:          Outdated
+Manual Trigger / Webhook
+          │
+          ▼
+Retrieve Project Portfolio
+          │
+          ▼
+Split Projects
+          │
+          ▼
+AI Project Health Analysis
+          │
+          ▼
+Structured Output Validation
+          │
+          ▼
+       RAG Router
+      /    |     \
+ GREEN   AMBER    RED
+   │       │       │
+   │       │       └── Executive Review
+   │       │
+   │       └── PMO-02
+   │             │
+   │          PM Review
+   │          /      \
+   │ ACKNOWLEDGE   ESCALATE
+   │                   │
+   │             Executive Review
+   │
+   └── Normal Monitoring
 ```
 
-The AI identifies the combination of financial, delivery, risk, resource and governance signals and classifies the project as requiring executive attention.
+---
 
-The workflow then routes the project to Executive review rather than simply generating another status report.
+# 🔐 Security & Repository Hygiene
+
+The public repository does not contain production credentials.
+
+The workflow exports have been sanitized to remove:
+
+- Gmail OAuth credential references;
+- Gemini credential references;
+- local n8n workflow IDs;
+- generated webhook IDs;
+- n8n instance identifiers;
+- environment-specific metadata.
+
+Anyone importing the workflows must configure their own credentials and environment.
 
 ---
 
-# 📈 Current Version
+# 🚀 Deployment
 
-## v0.9 — Portfolio MVP
+The current implementation runs in a **local Docker-based n8n environment**.
 
-Current capabilities include:
+This is intentional for the portfolio MVP and allows the complete workflow architecture and execution process to be demonstrated directly during technical interviews.
 
-✅ AI project-health analysis  
-✅ GREEN / AMBER / RED classification  
-✅ Project Manager review  
-✅ Executive approval/rejection  
-✅ Human-in-the-loop governance  
-✅ Corrective-action workflow  
-✅ Dynamic stakeholder routing  
-✅ Automated HTML email notifications  
-✅ Manual execution  
-✅ Webhook triggering  
-✅ Published n8n workflow version  
+The GitHub repository contains the sanitized workflow definitions and supporting project assets rather than access to the live n8n editor.
 
 ---
 
-# 🗺 Roadmap
+# 🎓 What This Project Demonstrates
 
-Planned next iterations include:
+This project was developed as a practical demonstration of capabilities across:
 
-- Jira integration
-- Confluence integration
-- Azure DevOps integration
-- automated RAID-log monitoring
-- persistent decision and audit history
-- portfolio dashboard
-- scheduled portfolio health checks
-- AI-generated weekly PMO reporting
-- automated meeting-summary ingestion
-- escalation SLA monitoring
-- configurable project-health thresholds
-- enterprise authentication for external webhooks
-- cloud deployment of n8n
-- observability and workflow error handling
+**AI Transformation**
+- identifying suitable enterprise processes for AI augmentation;
+- combining AI reasoning with deterministic business rules;
+- designing responsible human-in-the-loop decision processes.
 
----
+**IT PMO**
+- project health assessment;
+- RAG-based governance;
+- management escalation;
+- executive decision workflows;
+- corrective-action tracking.
 
-# 🌍 Potential Enterprise Use Cases
+**Workflow Automation**
+- modular workflow architecture;
+- API integration;
+- conditional routing;
+- sub-workflow orchestration;
+- approval forms;
+- automated communications.
 
-The same architecture can be extended beyond PMO governance to areas such as:
-
-- transformation programme management
-- IT portfolio governance
-- digital transformation offices
-- product portfolio management
-- risk management
-- operational governance
-- client delivery management
-- consulting programme oversight
+**Solution Architecture**
+- separation of orchestration and governance responsibilities;
+- structured AI outputs;
+- reusable workflow components;
+- secure credential handling.
 
 ---
 
-# 📌 Project Status
+# 🗺️ Roadmap
 
-This repository represents a **working portfolio MVP** built to demonstrate practical AI transformation, automation orchestration and human-in-the-loop governance.
+Potential next iterations include:
 
-It is intentionally designed as an evolving prototype rather than a finished commercial product.
+- PMO decision and execution audit logging;
+- persistent project-health history;
+- automated trend analysis;
+- dynamic stakeholder resolution;
+- centralized PMO dashboard;
+- portfolio-level executive reporting;
+- Jira / project-management platform integration;
+- scheduled portfolio health assessments;
+- automated monitoring of corrective-action deadlines;
+- additional modular workflows for RED governance;
+- production deployment and observability.
 
 ---
 
-## Author
+# ⚠️ Portfolio Project
 
-**Abel Gnonsoa**
+This repository is a **portfolio / proof-of-concept implementation**.
 
-Digital Transformation | AI Automation | Technology Delivery | PMO
+Project names, financial information, project health information, stakeholders and operational scenarios contained in the demonstration dataset are fictional and are used solely to illustrate the solution architecture.
+
+The system is intended to demonstrate AI-enabled PMO workflow design rather than provide a production-ready enterprise PMO platform.
 
 ---
 
-### ⭐ Project Vision
+## TOH AI PMO Command Center
 
-> **Remove administrative work from project management so people can focus on clients, priorities and decisions — while AI handles analysis, monitoring and workflow orchestration.**
+**AI analyzes.  
+Workflows orchestrate.  
+Humans decide.**
