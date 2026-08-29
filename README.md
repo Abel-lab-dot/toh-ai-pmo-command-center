@@ -102,6 +102,9 @@ It:
 5. classifies projects as GREEN, AMBER or RED;
 6. routes each project to the appropriate governance process.
 
+<img width="1917" height="866" alt="image" src="https://github.com/user-attachments/assets/d1789e4a-0395-4e0c-9b27-e747225bdfcb" />
+
+
 ### PMO-02 — AMBER Review & Executive Escalation
 
 PMO-02 handles the **human governance process for AMBER projects**.
@@ -123,6 +126,9 @@ The Executive can then:
 **APPROVE** → authorize the corrective action.
 
 **REJECT** → return the issue to the Project Manager for reassessment.
+
+<img width="1917" height="841" alt="image" src="https://github.com/user-attachments/assets/119cb18d-f46f-43f4-9c51-9d8b207f9208" />
+
 
 ---
 
